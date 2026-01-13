@@ -205,7 +205,6 @@ class J2V3D_PT_Joy2view3Dctrl(bpy.types.Panel):
             layout.operator(op_cls.bl_idname, text="Stop input(now:active)", icon="PAUSE")
         layout.separator()
         layout.prop(scene,"stick_ID_int", text = "コントローラーを選択")
-        layout.prop(scene,"stick_ID_enum",text = '選択(列挙型)')
         if bpy.context.scene.stick_ID_int != -1 :
             layout.label(text="axis assigin")
 
