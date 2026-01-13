@@ -52,9 +52,8 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
         if context.area:
             context.area.tag_redraw()
 
-        # パネル [日時を表示] のボタン [終了] を押したときに、モーダルモードを終了
+        # パネル最上部の [Stop input(now:active)] を押したときに、モーダルモードを終了
         if not self.is_running():
-            # テキストオブジェクトを削除
             return {'FINISHED'}
 
         if event.type == 'TIMER':
@@ -129,20 +128,20 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
 
 
 
-                '''#transparent (stick to world axis)
+                '''#transparent (stick to world axis/ワールド座標のX,Y,Zをスティック各軸に対応させ増減します)
                 if ax1x_ang > 0.001 or ax1x_ang < -0.001:
-                    #bpy.ops.view3d.view_pan(type='PANLEFT')
+                    #bpy.ops.view3d.view_pan(type='T_LEFT')
                     v3d = context.space_data
                     rv3d = v3d.region_3d
                     rv3d.view_location.x += ax1x_ang
-                    #print("PL")
+                    #print("TL")
 
                 if ax1y_ang > 0.001 or ax1y_ang < -0.001:
-                    #bpy.ops.view3d.view_pan(type='PANUP')
+                    #bpy.ops.view3d.view_pan(type='T_UP')
                     v3d = context.space_data
                     rv3d = v3d.region_3d
                     rv3d.view_location.y += ax1y_ang
-                    #print("PU")
+                    #print("TU")
             #rotate
             if ax0x_ang > 0.001 or ax0x_ang < -0.001:
                 bpy.ops.view3d.view_orbit(angle=ax0x_ang,type='ORBITRIGHT')
