@@ -162,7 +162,7 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
         op_cls = J2V3D_OT_Joy2view3Dctrl
 
         if context.area.type == 'VIEW_3D':
-            # [開始] ボタンが押された時の処理
+            # [開始] ボタンが押された時の処理(パネルかどこかからオペレーターが呼び出されたとき)
             if not op_cls.is_running():
                 #Initialize Joystick(still no setting stickIDs)
                 pygame.init()
@@ -186,7 +186,7 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
 # UI
 class J2V3D_PT_Joy2view3Dctrl(bpy.types.Panel):
 
-    bl_label = "Joy2View_customize_pnl"
+    bl_label = "Joy2View_launch_pnl"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "Joy2View"
@@ -204,8 +204,29 @@ class J2V3D_PT_Joy2view3Dctrl(bpy.types.Panel):
         else:
             # 第一変数のidnameのオペレーターを実行開始/停止するボタン
             layout.operator(op_cls.bl_idname, text="Stop input(now:active)", icon="PAUSE")
+
+class J2V3D_PT_settings(bpy.types.Panel):
+
+    bl_label = "Joy2View_customize_pnl"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = "Joy2View"
+    # bl_context = "objectmode"
+    
+
+    def draw(self, context):
+        scene = context.scene
+        layout = self.layout
         layout.separator()
+
+        layout.label(text="状態更新")
+        row = layout.row(align=True)
+        row.operator(J2V3D_OT_Inithprops.bl_idname, text="接続状態",icon="FILE_REFRESH")
+        row.operator(J2V3D_OT_Refreshprops.bl_idname, text="軸の情報",icon="FILE_REFRESH")
+        
         layout.prop(scene,"stick_ID_int", text = "コントローラーを選択")
+    
+
         if bpy.context.scene.stick_ID_int != -1 :
             layout.label(text="axis assigin")
 
@@ -214,11 +235,27 @@ class J2V3D_PT_Joy2view3Dctrl(bpy.types.Panel):
             layout.separator()
             layout.label(text="key assigin")
 
+class J2V3D_OT_Inithprops(bpy.types.Operator):
+    # idnameには.を最低限一つ
+    bl_idname = "view3d.joy2view_init_props"
+    bl_label = "Joy2View_relesh"
+    bl_description = "入力装置を更新します"
 
-classes = [
-    J2V3D_OT_Joy2view3Dctrl,
-    J2V3D_PT_Joy2view3Dctrl,
-]
+    def invoke(self, context, event):
+        init_props()
+        return {'FINISHED'}
+
+class J2V3D_OT_Refreshprops(bpy.types.Operator):
+    # idnameには.を最低限一つ
+    bl_idname = "view3d.joy2view_refresh_props"
+    bl_label = "Joy2View_relesh"
+    bl_description = "軸情報を更新します"
+
+    def invoke(self, context, event):
+        ref_props()
+        return {'FINISHED'}
+
+
 
 
 from bpy.props import (
@@ -229,9 +266,12 @@ from bpy.props import (
 
 
 def init_props():
-    sticks_num = pygame.joystick.get_count()
+    
     pygame.init()
     pygame.joystick.init()
+    sticks_num = pygame.joystick.get_count()
+    pygame.quit()
+
     scene = bpy.types.Scene
     scene.stick_ID_int = IntProperty(
         name = 'joystick ID',
@@ -275,10 +315,62 @@ def init_props():
         min = 0,
         max = 5
     )
+
+def ref_props():
+    pygame.init()
+    pygame.joystick.init()
+    sticks_num = pygame.joystick.get_count()
+    scene = bpy.types.Scene
+
+    stick = pygame.joystick.Joystick(bpy.context.scene.stick_ID_int)
+    stick.init()
+    num_axes = stick.get_numaxes()
     pygame.quit()
+    scene.ax0x = IntProperty(
+        name = 'primalystick(x) ID',
+        default = 0,
+        min = 0,
+        max = num_axes
+    )
+    scene.ax0y = IntProperty(
+        name = 'primalystick(y) ID',
+        default = 1,
+        min = 0,
+        max = num_axes
+    )
+    scene.ax1x = IntProperty(
+        name = 'substick(x) ID',
+        default = 3,
+        min = 0,
+        max = num_axes
+    )
+    scene.ax1y = IntProperty(
+        name = 'substick(y) ID',
+        default = 4,
+        min = 0,
+        max = num_axes
+    )
+    scene.ax_t1 = IntProperty(
+        name = 'trigger ID',
+        default = 5,
+        min = 0,
+        max = num_axes
+    )
+    scene.ax_t2 = IntProperty(
+        name = 'trigger ID(optimal)',
+        default = 0,
+        min = 0,
+        max = num_axes
+    )
+
 
 
 def clear_props():
     scene = bpy.types.Scene
     del scene.stick_ID_int
-    del scene.stick_ID_enum
+    del scene.ax0x
+    del scene.ax0y
+    del scene.ax1x
+    del scene.ax1y
+    del scene.ax_t1
+    del scene.ax_t2

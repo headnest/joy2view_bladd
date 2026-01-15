@@ -40,7 +40,10 @@ except ImportError as e:
 from . import v3_modal_orbit_qtn as main
 classes = [
     main.J2V3D_OT_Joy2view3Dctrl,
+    main.J2V3D_OT_Inithprops,
+    main.J2V3D_OT_Refreshprops,
     main.J2V3D_PT_Joy2view3Dctrl,
+    main.J2V3D_PT_settings
 ]
 
 def register():
