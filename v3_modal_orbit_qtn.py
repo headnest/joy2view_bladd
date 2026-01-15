@@ -97,7 +97,7 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
                 #print(qtn.__class__.__name__)
                 #print(qtn[0])
 
-                # transparent xy (view port axis)
+                # transparent xy (view port axis)(並行移動)
                 if ax1x_ang > 0.001 or ax1x_ang < -0.001 or ax1y_ang > 0.001 or ax1y_ang < -0.001:
                     #bpy.ops.view3d.view_pan(type='PANLEFT')
                     tpv =  vrot @ Vector((ax1x_ang,ax1y_ang,0))
@@ -110,7 +110,7 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
                     rv3d.view_distance -= ax2t_ang
                     #print=("ZOOM")
 
-                # pan xy 
+                # pan xy (回転)
                 if ax0x_ang > 0.001 or ax0x_ang < -0.001 or ax0y_ang > 0.001 or ax0y_ang < -0.001:
                     x = Vector((1,0,0))
                     y = Vector((0,1,0))
@@ -229,6 +229,12 @@ class J2V3D_PT_settings(bpy.types.Panel):
 
         if bpy.context.scene.stick_ID_int != -1 :
             layout.label(text="axis assigin")
+            layout.prop(scene,"ax0x", text = "回転軸x")
+            layout.prop(scene,"ax0y", text = "回転軸y")
+            layout.prop(scene,"ax1x", text = "並行移動軸x")
+            layout.prop(scene,"ax1y", text = "並行移動軸y")
+            layout.prop(scene,"ax_t1", text = "ズーム軸")
+            layout.prop(scene,"ax_t2", text = "(未実装)前後移動軸")
 
 
 
