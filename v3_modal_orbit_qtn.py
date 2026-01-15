@@ -199,8 +199,10 @@ class J2V3D_PT_Joy2view3Dctrl(bpy.types.Panel):
         layout = self.layout
         # [開始] / [停止] ボタンを追加
         if not op_cls.is_running():
+            # 第一変数のidnameのオペレーターを実行開始/停止するボタン
             layout.operator(op_cls.bl_idname, text="Start(now:off)", icon="PLAY")
         else:
+            # 第一変数のidnameのオペレーターを実行開始/停止するボタン
             layout.operator(op_cls.bl_idname, text="Stop input(now:active)", icon="PAUSE")
         layout.separator()
         layout.prop(scene,"stick_ID_int", text = "コントローラーを選択")
