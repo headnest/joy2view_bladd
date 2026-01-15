@@ -74,11 +74,19 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
             """
 
             _jb = op_cls.__0jyosan_blocker
+            """
+
             ax0x_ang = (op_cls.__pg_joys_obj.get_axis(0)+_jb)/20.0
             ax0y_ang = (op_cls.__pg_joys_obj.get_axis(1)+_jb)/20.0
             ax1x_ang = (op_cls.__pg_joys_obj.get_axis(3)+_jb)/10.0
             ax1y_ang = (op_cls.__pg_joys_obj.get_axis(4)+_jb)/10.0
             ax2t_ang = (op_cls.__pg_joys_obj.get_axis(5)+_jb)/5.0
+            """
+            ax0x_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax0x)+_jb)/20.0
+            ax0y_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax0y)+_jb)/20.0
+            ax1x_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax1x)+_jb)/10.0
+            ax1y_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax1y)+_jb)/10.0
+            ax2t_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t1)+_jb)/5.0
             #print(ax0x_ang)
             #print(ax0y_ang)
             #print(ax1x_ang)
@@ -293,30 +301,30 @@ def init_props():
     )
     scene.ax0y = IntProperty(
         name = 'primalystick(y) ID',
-        default = 0,
+        default = 1,
         min = 0,
         max = 5
     )
     scene.ax1x = IntProperty(
         name = 'substick(x) ID',
-        default = 0,
+        default = 3,
         min = 0,
         max = 5
     )
     scene.ax1y = IntProperty(
         name = 'substick(y) ID',
-        default = 0,
+        default = 4,
         min = 0,
         max = 5
     )
     scene.ax_t1 = IntProperty(
-        name = 'trigger ID',
-        default = 0,
+        name = 'zoomaxis ID',
+        default = 5,
         min = 0,
         max = 5
     )
     scene.ax_t2 = IntProperty(
-        name = 'trigger ID(optimal)',
+        name = 'zommaxis ID(optimal)',
         default = 0,
         min = 0,
         max = 5
