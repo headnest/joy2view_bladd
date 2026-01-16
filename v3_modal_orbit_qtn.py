@@ -293,49 +293,49 @@ def init_props():
     scene = bpy.types.Scene
     scene.stick_ID_int = IntProperty(
         name = 'joystick ID',
-        default = 0,
+        default = -1,
         min = -1,
         max = sticks_num - 1
     )
     scene.ax0x = IntProperty(
         name = 'primalystick(x) ID',
-        default = 0,
+        default = 2,
         min = 0,
         max = 5
     )
     scene.ax0y = IntProperty(
         name = 'primalystick(y) ID',
-        default = 1,
+        default = 3,
         min = 0,
         max = 5
     )
     scene.ax1x = IntProperty(
         name = 'substick(x) ID',
-        default = 3,
+        default = 0,
         min = 0,
         max = 5
     )
     scene.ax1y = IntProperty(
         name = 'substick(y) ID',
-        default = 4,
+        default = 1,
         min = 0,
         max = 5
     )
     scene.ax_t0 = IntProperty(
         name = 'zoom axis ID',
-        default = 5,
+        default = -1,
         min = -1,
         max = 5
     )
     scene.ax_t1 = IntProperty(
         name = 'zoomaxis ID',
-        default = 5,
+        default = 4,
         min = 0,
         max = 5
     )
     scene.ax_t2 = IntProperty(
         name = 'zommaxis ID(optimal)',
-        default = 0,
+        default = 5,
         min = 0,
         max = 5
     )
