@@ -243,14 +243,25 @@ class J2V3D_PT_settings(bpy.types.Panel):
     
 
         if bpy.context.scene.stick_ID_int != -1 :
+
             layout.label(text="axis assigin")
-            layout.prop(scene,"ax0x", text = "回転軸x")
-            layout.prop(scene,"ax0y", text = "回転軸y")
-            layout.prop(scene,"ax1x", text = "並行移動軸x")
-            layout.prop(scene,"ax1y", text = "並行移動軸y")
-            layout.prop(scene,"ax_t0", text = "ズーム軸(1軸)_-1で無効化")
-            layout.prop(scene,"ax_t1", text = "ズーム軸(トリガー1)")
-            layout.prop(scene,"ax_t2", text = "ズーム軸(トリガー2)")
+            col_ax0 = layout.column(align=True)
+            col_ax0.prop(scene,"ax0x", text = "回転軸x")
+            col_ax0.prop(scene,"ax0y", text = "回転軸y")
+            col_ax0.prop(scene,"ax0y_rev", text = "回転y軸反転")
+
+            
+            col_ax1 = layout.column(align=True)
+            col_ax1.prop(scene,"ax1x", text = "並行移動軸x")
+            col_ax1.prop(scene,"ax1y", text = "並行移動軸y")
+            col_ax1.prop(scene,"ax1y_rev", text = "並行y軸反転")
+
+
+            col_zoom = layout.column(align=True)
+            col_zoom.prop(scene,"ax_t0", text = "ズーム軸(1軸)_-1で無効化")
+            col_zoom.prop(scene,"ax_t1", text = "ズーム軸(トリガー1)")
+            col_zoom.prop(scene,"ax_t2", text = "ズーム軸(トリガー2)")
+            col_zoom.prop(scene,"ax_t_rev", text = "ズーム軸反転")
 
             layout.separator()
             layout.label(text="key assigin")
@@ -280,6 +291,7 @@ class J2V3D_OT_Refreshprops(bpy.types.Operator):
 
 from bpy.props import (
     IntProperty,
+    BoolProperty
 )
 
 
@@ -338,6 +350,18 @@ def init_props():
         default = 5,
         min = 0,
         max = 5
+    )
+    scene.ax0y_rev = BoolProperty(
+        name="reverse_vertical_rotate",
+        default=False
+    )
+    scene.ax1y_rev = BoolProperty(
+        name="reverse_vertical_transparent",
+        default=False
+    )
+    scene.ax_t_rev = BoolProperty(
+        name="reverse_zoom",
+        default=False
     )
 
 def ref_props():
@@ -404,3 +428,6 @@ def clear_props():
     del scene.ax_t0
     del scene.ax_t1
     del scene.ax_t2
+    del scene.ax0y_rev
+    del scene.ax1y_rev
+    del scene.ax_t_rev
