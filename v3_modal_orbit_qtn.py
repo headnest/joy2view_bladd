@@ -133,7 +133,7 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
                         tpv =  vrot @ Vector((0,0,ax2t_ang))
                         rv3d.view_location += tpv
                     else:
-                        rv3d.view_distance -= ax2t_ang
+                        rv3d.view_distance += ax2t_ang
                     #print=("ZOOM")
 
                 # pan xy (回転)
