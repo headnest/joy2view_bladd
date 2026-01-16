@@ -86,7 +86,12 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
             ax0y_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax0y)+_jb)/20.0
             ax1x_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax1x)+_jb)/10.0
             ax1y_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax1y)+_jb)/10.0
-            ax2t_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t1)+_jb)/5.0
+
+            if bpy.context.scene.ax_t0 != -1 :
+                ax2t_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t0)+_jb)/5.0
+            else :
+                ax2t_ang = ((op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t1)+_jb) - (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t2))) /10.0
+
             #print(ax0x_ang)
             #print(ax0y_ang)
             #print(ax1x_ang)
@@ -173,9 +178,11 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
             # [開始] ボタンが押された時の処理(パネルかどこかからオペレーターが呼び出されたとき)
             if not op_cls.is_running():
                 #Initialize Joystick(still no setting stickIDs)
+                if bpy.context.scene.stick_ID_int == -1:
+                    return{'FINISHED'}
                 pygame.init()
                 pygame.joystick.init()
-                op_cls.__pg_joys_obj = pygame.joystick.Joystick(1)
+                op_cls.__pg_joys_obj = pygame.joystick.Joystick(bpy.context.scene.stick_ID_int)
                 op_cls.__pg_joys_obj.init()
                 # start MODAL mode
                 self.__handle_add(context)
@@ -241,10 +248,9 @@ class J2V3D_PT_settings(bpy.types.Panel):
             layout.prop(scene,"ax0y", text = "回転軸y")
             layout.prop(scene,"ax1x", text = "並行移動軸x")
             layout.prop(scene,"ax1y", text = "並行移動軸y")
-            layout.prop(scene,"ax_t1", text = "ズーム軸")
-            layout.prop(scene,"ax_t2", text = "(未実装)前後移動軸")
-
-
+            layout.prop(scene,"ax_t0", text = "ズーム軸(1軸)_-1で無効化")
+            layout.prop(scene,"ax_t1", text = "ズーム軸(トリガー1)")
+            layout.prop(scene,"ax_t2", text = "ズーム軸(トリガー2)")
 
             layout.separator()
             layout.label(text="key assigin")
@@ -274,8 +280,6 @@ class J2V3D_OT_Refreshprops(bpy.types.Operator):
 
 from bpy.props import (
     IntProperty,
-    BoolProperty,
-    EnumProperty,
 )
 
 
@@ -317,6 +321,12 @@ def init_props():
         min = 0,
         max = 5
     )
+    scene.ax_t0 = IntProperty(
+        name = 'zoom axis ID',
+        default = 5,
+        min = -1,
+        max = 5
+    )
     scene.ax_t1 = IntProperty(
         name = 'zoomaxis ID',
         default = 5,
@@ -333,7 +343,6 @@ def init_props():
 def ref_props():
     pygame.init()
     pygame.joystick.init()
-    sticks_num = pygame.joystick.get_count()
     scene = bpy.types.Scene
 
     stick = pygame.joystick.Joystick(bpy.context.scene.stick_ID_int)
@@ -344,37 +353,43 @@ def ref_props():
         name = 'primalystick(x) ID',
         default = 0,
         min = 0,
-        max = num_axes
+        max = num_axes-1
     )
     scene.ax0y = IntProperty(
         name = 'primalystick(y) ID',
         default = 1,
         min = 0,
-        max = num_axes
+        max = num_axes-1
     )
     scene.ax1x = IntProperty(
         name = 'substick(x) ID',
         default = 3,
         min = 0,
-        max = num_axes
+        max = num_axes-1
     )
     scene.ax1y = IntProperty(
         name = 'substick(y) ID',
         default = 4,
         min = 0,
-        max = num_axes
+        max = num_axes-1
+    )
+    scene.ax_t0 = IntProperty(
+        name = 'zoom axis ID',
+        default = 5,
+        min = -1,
+        max = num_axes-1
     )
     scene.ax_t1 = IntProperty(
-        name = 'trigger ID',
-        default = 5,
-        min = 0,
-        max = num_axes
-    )
-    scene.ax_t2 = IntProperty(
-        name = 'trigger ID(optimal)',
+        name = 'trigger(zoom)1 ID',
         default = 0,
         min = 0,
-        max = num_axes
+        max = num_axes-1
+    )
+    scene.ax_t2 = IntProperty(
+        name = 'trigger(zoom)2 ID',
+        default = 0,
+        min = 0,
+        max = num_axes-1
     )
 
 
@@ -386,5 +401,6 @@ def clear_props():
     del scene.ax0y
     del scene.ax1x
     del scene.ax1y
+    del scene.ax_t0
     del scene.ax_t1
     del scene.ax_t2
