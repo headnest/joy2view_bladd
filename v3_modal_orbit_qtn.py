@@ -129,8 +129,11 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
                 # zoomin/out
                 if ax2t_ang > 0.001 or ax2t_ang < -0.001:
                     #rv3d.view_camera_zoom = 0.0
-                    
-                    rv3d.view_distance -= ax2t_ang
+                    if bpy.context.scene.ax_t_tr:
+                        tpv =  vrot @ Vector((0,0,ax2t_ang))
+                        rv3d.view_location += tpv
+                    else:
+                        rv3d.view_distance -= ax2t_ang
                     #print=("ZOOM")
 
                 # pan xy (回転)
@@ -272,6 +275,7 @@ class J2V3D_PT_settings(bpy.types.Panel):
             col_zoom.prop(scene,"ax_t1", text = "ズーム軸(トリガー1)")
             col_zoom.prop(scene,"ax_t2", text = "ズーム軸(トリガー2)")
             col_zoom.prop(scene,"ax_t_rev", text = "ズーム軸反転")
+            col_zoom.prop(scene,"ax_t_tr", text = "ズーム軸を前後移動に")
 
             layout.separator()
             layout.label(text="key assigin")
@@ -373,6 +377,10 @@ def init_props():
         name="reverse_zoom",
         default=False
     )
+    scene.ax_t_tr = BoolProperty(
+        name="reverse_zoom",
+        default=True
+    )
 
 def ref_props():
     pygame.init()
@@ -441,3 +449,4 @@ def clear_props():
     del scene.ax0y_rev
     del scene.ax1y_rev
     del scene.ax_t_rev
+    del scene.ax_t_tr
