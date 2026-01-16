@@ -84,13 +84,23 @@ class J2V3D_OT_Joy2view3Dctrl(bpy.types.Operator):
             """
             ax0x_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax0x)+_jb)/20.0
             ax0y_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax0y)+_jb)/20.0
+            if (bpy.context.scene.ax0y_rev):
+                ax0y_ang *= -1
+
             ax1x_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax1x)+_jb)/10.0
             ax1y_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax1y)+_jb)/10.0
+            if (bpy.context.scene.ax1y_rev):
+                ax1y_ang *= -1
+
 
             if bpy.context.scene.ax_t0 != -1 :
                 ax2t_ang = (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t0)+_jb)/5.0
             else :
                 ax2t_ang = ((op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t1)+_jb) - (op_cls.__pg_joys_obj.get_axis(bpy.context.scene.ax_t2))) /10.0
+
+            if (bpy.context.scene.ax_t_rev):
+                ax2t_ang *= -1
+
 
             #print(ax0x_ang)
             #print(ax0y_ang)
