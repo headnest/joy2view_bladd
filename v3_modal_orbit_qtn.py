@@ -351,43 +351,43 @@ def ref_props():
     pygame.quit()
     scene.ax0x = IntProperty(
         name = 'primalystick(x) ID',
-        default = 0,
+        default = 2,
         min = 0,
         max = num_axes-1
     )
     scene.ax0y = IntProperty(
         name = 'primalystick(y) ID',
-        default = 1,
+        default = 3,
         min = 0,
         max = num_axes-1
     )
     scene.ax1x = IntProperty(
         name = 'substick(x) ID',
-        default = 3,
+        default = 0,
         min = 0,
         max = num_axes-1
     )
     scene.ax1y = IntProperty(
         name = 'substick(y) ID',
-        default = 4,
+        default = 1,
         min = 0,
         max = num_axes-1
     )
     scene.ax_t0 = IntProperty(
         name = 'zoom axis ID',
-        default = 5,
+        default = -1,
         min = -1,
         max = num_axes-1
     )
     scene.ax_t1 = IntProperty(
         name = 'trigger(zoom)1 ID',
-        default = 0,
+        default = 4,
         min = 0,
         max = num_axes-1
     )
     scene.ax_t2 = IntProperty(
         name = 'trigger(zoom)2 ID',
-        default = 0,
+        default = 5,
         min = 0,
         max = num_axes-1
     )
